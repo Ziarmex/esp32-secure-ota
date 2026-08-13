@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: MIT
+# Baseline configuration: buildable and flashable on any classic ESP32 without
+# burning any eFuse. Secure Boot v2 / flash encryption live in
+# sdkconfig.secure.defaults and are opt-in.
+
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
+# 0x9000 (instead of 0x8000) leaves room for the larger Secure Boot bootloader.
+CONFIG_PARTITION_TABLE_OFFSET=0x9000
+
+# Two OTA slots + rollback kept in place.
+CONFIG_APP_PROJECT_VER_FROM_CONFIG=n
+CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y
+CONFIG_BOOTLOADER_APP_ROLLBACK_CONFIRM_ON_STARTUP=n
+CONFIG_BOOTLOADER_APP_ROLLBACK_CONFIRM_BY_APP=y
+
+# Network + logging.
+CONFIG_ESP32_DEFAULT_CPU_FREQ_240=y
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+
+# Keep the console usable for bring-up.
+CONFIG_ESP_CONSOLE_UART_DEFAULT=y
