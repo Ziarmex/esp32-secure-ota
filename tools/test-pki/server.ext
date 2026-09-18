@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+# TEST-ONLY PKI for the local OTA demo. Regenerate with tools/test-pki/generate.sh.
+# DO NOT use these keys or this CA outside a local bench.
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = DNS:localhost, IP:127.0.0.1
