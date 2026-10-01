@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT
+# OPT-IN secure configuration. Build with:
+#   idf.py -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.secure.defaults" build
+#
+# WARNING: the first boot of a secure-boot + flash-encryption device BURNS
+# eFuses and is IRREVERSIBLE. Read docs/secure-boot.md and README.md first.
+# Keeping this out of sdkconfig.defaults means a plain `idf.py build` can never
+# accidentally brick your board.
+
+# Secure Boot v2 requires ESP32 chip revision v3.0 (ECO3) or newer.
+CONFIG_ESP32_REV_MIN=3
+
+# --- Secure Boot v2 (RSA-3072, RSA-PSS) ---
+CONFIG_SECURE_BOOT=y
+CONFIG_SECURE_BOOT_V2_ENABLED=y
+CONFIG_SECURE_BOOT_BUILD_SIGNED_BINARIES=y
+CONFIG_SECURE_BOOT_SIGNING_KEY="secure_boot_signing_key.pem"
+
+# --- Flash encryption (AES-256) ---
+# Development mode is used here so you can still re-flash plaintext while
+# iterating. Switch to release mode only for a real product.
+CONFIG_SECURE_FLASH_ENC_ENABLED=y
+CONFIG_SECURE_FLASH_ENCRYPTION_MODE_DEVELOPMENT=y
+
+# --- Anti-rollback ---
+# With anti-rollback, the app must confirm itself after a self-test
+# (automatic confirmation is not available).
+CONFIG_BOOTLOADER_APP_ANTI_ROLLBACK=y
+CONFIG_BOOTLOADER_APP_SECURE_VERSION=1
+CONFIG_BOOTLOADER_APP_SEC_VER_SIZE_EFUSE_FIELD=32
+CONFIG_BOOTLOADER_APP_ROLLBACK_CONFIRM_ON_STARTUP=n
+CONFIG_BOOTLOADER_APP_ROLLBACK_CONFIRM_BY_APP=y
