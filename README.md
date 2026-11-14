@@ -56,7 +56,7 @@ esp32-secure-ota/
 ## Requirements
 
 - ESP-IDF **v5.2+** (`idf.py` on `PATH`)
-- A classic **ESP32** dev board (Secure Boot v2 needs chip revision **v3.0+**)
+- A classic **ESP32** dev board with **4 MB flash** (the A/B partition table needs it; Secure Boot v2 needs chip revision **v3.0+**)
 - `openssl`, `python3`
 - `pytest` + `cryptography` for the host tests
 
