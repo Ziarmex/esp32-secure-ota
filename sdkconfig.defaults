@@ -6,8 +6,8 @@
 CONFIG_PARTITION_TABLE_CUSTOM=y
 CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
 CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
-# 0x9000 (instead of 0x8000) leaves room for the larger Secure Boot bootloader.
-CONFIG_PARTITION_TABLE_OFFSET=0x9000
+# 0x10000 leaves room for the Secure Boot + flash encryption bootloader.
+CONFIG_PARTITION_TABLE_OFFSET=0x10000
 # Two 1408K OTA slots + metadata need ~2.9 MB, so the target must have 4 MB flash.
 CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
 
