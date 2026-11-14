@@ -26,33 +26,7 @@ you recover when that code is bad?*
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    subgraph Release["Release host"]
-        KEY["Secure Boot signing key<br/>(RSA-3072, offline)"]
-        SIGN["idf.py build<br/>+ sign"]
-        FW["firmware.bin"]
-        MF["manifest.json"]
-        KEY --> SIGN --> FW
-        FW --> MF
-    end
-
-    subgraph Server["HTTPS release server"]
-        HTTP["ota_server.py<br/>TLS"]
-    end
-
-    subgraph Device["ESP32"]
-        ROM["ROM + bootloader<br/>verify RSA-PSS signature"]
-        APP["application"]
-        ST{"self-test"}
-        ROM -->|"valid signature<br/>else halt"| APP
-        APP -->|"GET manifest.json"| HTTP
-        APP -->|"esp_https_ota (signed image)"| HTTP
-        APP --> ST
-        ST -->|"pass: mark valid"| DONE["stay"]
-        ST -->|"fail: rollback"| PREV["previous image"]
-    end
-```
+<img src="docs/diagrams/esp32-secure-ota-architecture.svg" alt="ESP32 secure OTA update path: signed release built on the host, delivered by an untrusted HTTPS host, verified by the bootloader chain, with A/B OTA slots, self-test, and automatic rollback" width="100%">
 
 ## Repository layout
 

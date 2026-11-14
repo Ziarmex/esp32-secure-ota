@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" width="1200" height="780" role="img" aria-labelledby="diagram-title diagram-desc" font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <title id="diagram-title">ESP32 secure OTA update path</title>
+  <desc id="diagram-desc">A laptop builds and signs a firmware release, an untrusted HTTPS host distributes it, and the ESP32 bootloader chain verifies the signature before booting. A self-test confirms the new image, or the bootloader rolls back to the previous slot.</desc>
+
+  <defs>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.8" fill="#E8EDF2" opacity="0.09"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#ECF0F3"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#FF6B5E"/>
+    </marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#5FE0B4"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="780" fill="#14181D"/>
+  <rect width="1200" height="780" fill="url(#dots)"/>
+
+  <!-- Header -->
+  <text x="48" y="48" font-size="9.5" font-weight="600" letter-spacing="2.2" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#F0A83C">FIG. 01 — SECURE UPDATE PATH</text>
+  <text x="48" y="79" font-size="24" font-family="Georgia, 'Times New Roman', serif" fill="#ECF0F3">ESP32 secure OTA</text>
+  <text x="48" y="99" font-size="11.5" fill="#9AA3AC">signed release → verified boot → automatic rollback</text>
+
+  <text x="1152" y="52" font-size="9.5" text-anchor="end" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">RSA-3072 · SHA-256 · AES-256</text>
+  <text x="1152" y="68" font-size="9.5" text-anchor="end" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">Secure Boot v2 · A/B OTA</text>
+
+  <line x1="48" y1="112" x2="1152" y2="112" stroke="#2A3037"/>
+
+  <!-- Release host -->
+  <g>
+    <rect x="78" y="158" width="192" height="134" rx="8" fill="#1C2229" stroke="#0B0E12" stroke-width="2"/>
+    <rect x="86" y="166" width="176" height="118" rx="4" fill="#0F1318"/>
+    <circle cx="174" cy="162" r="1.5" fill="#5E7286"/>
+
+    <text x="98" y="192" font-size="11.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#7FE0C2">$ <tspan fill="#D6E0E9">idf.py build</tspan></text>
+    <rect x="199" y="182" width="5" height="12" fill="#7FE0C2" opacity="0.65"/>
+    <text x="98" y="214" font-size="11.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#8FA0B2">$ <tspan fill="#D6E0E9">sign firmware.bin</tspan></text>
+    <text x="98" y="236" font-size="11.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#C9D5E0">firmware.bin</text>
+    <path d="M190 231 l4 4 l8 -9" fill="none" stroke="#7FE0C2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="98" y="258" font-size="11.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#C9D5E0">manifest.json</text>
+
+    <path d="M60 298 H288 L274 316 H74 Z" fill="#C9D1D8" stroke="#8E99A3" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="150" y="300" width="48" height="5" rx="2.5" fill="#B5BFC8"/>
+
+    <circle cx="262" cy="162" r="16" fill="#2A2318" stroke="#C99032" stroke-width="1.5"/>
+    <circle cx="256" cy="160" r="4.5" fill="none" stroke="#F0A83C" stroke-width="1.8"/>
+    <line x1="260" y1="160" x2="272" y2="160" stroke="#F0A83C" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="267" y1="160" x2="267" y2="165" stroke="#F0A83C" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="271" y1="160" x2="271" y2="166" stroke="#F0A83C" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="284" y="166" font-size="10.5" font-weight="600" fill="#F3B95F">offline key</text>
+
+    <text x="174" y="362" font-size="15" font-weight="700" fill="#ECF0F3" text-anchor="middle">Release host</text>
+    <text x="174" y="380" font-size="12" fill="#9AA3AC" text-anchor="middle">build → sign → manifest</text>
+    <text x="174" y="400" font-size="9" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#7C8791" text-anchor="middle">manifest v1.1.0 · sha256 9f2c…a7</text>
+  </g>
+
+  <line x1="300" y1="250" x2="446" y2="250" stroke="#ECF0F3" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="373" y="238" font-size="10.5" fill="#9AA3AC" text-anchor="middle">signed release</text>
+
+  <!-- Untrusted HTTPS host -->
+  <g>
+    <rect x="460" y="150" width="164" height="188" rx="10" fill="none" stroke="#F0A83C" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.6"/>
+
+    <rect x="480" y="164" width="124" height="160" rx="10" fill="#1C2229" stroke="#0B0E12" stroke-width="1.8"/>
+
+    <rect x="492" y="176" width="100" height="28" rx="4" fill="#262E37" stroke="#3A4550"/>
+    <line x1="500" y1="186" x2="518" y2="186" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="191" x2="518" y2="191" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="196" x2="518" y2="196" stroke="#12181E" stroke-width="2"/>
+    <circle cx="570" cy="190" r="2.5" fill="#5FE0B4"/>
+    <circle cx="579" cy="190" r="2.5" fill="#F0A83C"/>
+
+    <rect x="492" y="214" width="100" height="28" rx="4" fill="#262E37" stroke="#3A4550"/>
+    <line x1="500" y1="224" x2="518" y2="224" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="229" x2="518" y2="229" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="234" x2="518" y2="234" stroke="#12181E" stroke-width="2"/>
+    <circle cx="570" cy="228" r="2.5" fill="#5FE0B4"/>
+    <circle cx="579" cy="228" r="2.5" fill="#5FE0B4"/>
+
+    <rect x="492" y="252" width="100" height="28" rx="4" fill="#262E37" stroke="#3A4550"/>
+    <line x1="500" y1="262" x2="518" y2="262" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="267" x2="518" y2="267" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="272" x2="518" y2="272" stroke="#12181E" stroke-width="2"/>
+    <circle cx="570" cy="266" r="2.5" fill="#F0A83C"/>
+    <circle cx="579" cy="266" r="2.5" fill="#5FE0B4"/>
+
+    <rect x="492" y="290" width="100" height="22" rx="4" fill="#262E37" stroke="#3A4550"/>
+    <line x1="500" y1="299" x2="530" y2="299" stroke="#12181E" stroke-width="2"/>
+    <line x1="500" y1="304" x2="530" y2="304" stroke="#12181E" stroke-width="2"/>
+
+    <circle cx="606" cy="318" r="15" fill="#6FB7E8" stroke="#14181D" stroke-width="3"/>
+    <rect x="600" y="314" width="12" height="10" rx="2" fill="#14181D"/>
+    <path d="M603 314 v-3.5 a3.5 3.5 0 0 1 7 0 v3.5" fill="none" stroke="#14181D" stroke-width="1.8"/>
+
+    <text x="542" y="362" font-size="15" font-weight="700" fill="#ECF0F3" text-anchor="middle">HTTPS release host</text>
+    <text x="542" y="380" font-size="12" fill="#9AA3AC" text-anchor="middle">TLS + CA pinning</text>
+    <text x="542" y="400" font-size="10" fill="#F3B95F" text-anchor="middle">untrusted host — the signature is trusted</text>
+  </g>
+
+  <!-- Delivery -->
+  <line x1="638" y1="250" x2="800" y2="250" stroke="#ECF0F3" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <g stroke="#ECF0F3" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.8">
+    <path d="M711 234 A 10 10 0 0 1 727 234"/>
+    <path d="M705 228 A 18 18 0 0 1 733 228"/>
+    <path d="M699 222 A 26 26 0 0 1 739 222"/>
+  </g>
+  <circle cx="719" cy="242" r="2" fill="#ECF0F3"/>
+  <text x="719" y="210" font-size="10.5" fill="#9AA3AC" text-anchor="middle">HTTPS · CA pinned</text>
+  <text x="719" y="270" font-size="10.5" fill="#9AA3AC" text-anchor="middle">manifest + firmware</text>
+
+  <!-- ESP32 board inside trust boundary -->
+  <g>
+    <rect x="806" y="136" width="332" height="200" rx="14" fill="none" stroke="#5FE0B4" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.55"/>
+    <text x="1124" y="130" font-size="8.5" font-weight="600" letter-spacing="1.6" fill="#5FE0B4" text-anchor="end">TRUST BOUNDARY</text>
+
+    <rect x="820" y="156" width="304" height="168" rx="12" fill="#0C4A3F" stroke="#1C6B5B" stroke-width="2"/>
+    <path d="M832 184 h9 v-11 h8 v11 h8 v-11 h8 v11 h8" fill="none" stroke="#D9A441" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g fill="#D9A441">
+      <rect x="820" y="200" width="9" height="5" rx="1"/><rect x="820" y="212" width="9" height="5" rx="1"/><rect x="820" y="224" width="9" height="5" rx="1"/><rect x="820" y="236" width="9" height="5" rx="1"/><rect x="820" y="248" width="9" height="5" rx="1"/><rect x="820" y="260" width="9" height="5" rx="1"/><rect x="820" y="272" width="9" height="5" rx="1"/><rect x="820" y="284" width="9" height="5" rx="1"/>
+      <rect x="1115" y="200" width="9" height="5" rx="1"/><rect x="1115" y="212" width="9" height="5" rx="1"/><rect x="1115" y="224" width="9" height="5" rx="1"/><rect x="1115" y="236" width="9" height="5" rx="1"/><rect x="1115" y="248" width="9" height="5" rx="1"/><rect x="1115" y="260" width="9" height="5" rx="1"/><rect x="1115" y="272" width="9" height="5" rx="1"/><rect x="1115" y="284" width="9" height="5" rx="1"/>
+    </g>
+
+    <rect x="936" y="196" width="94" height="68" rx="5" fill="#D0D7DD" stroke="#8E99A3" stroke-width="1.4"/>
+    <circle cx="1022" cy="205" r="2" fill="#8E99A3"/>
+    <text x="983" y="236" font-size="11" font-weight="700" fill="#1C2229" text-anchor="middle">ESP32</text>
+    <text x="983" y="250" font-size="6.5" fill="#6A7480" text-anchor="middle" letter-spacing="0.6">WROOM-32</text>
+
+    <rect x="952" y="312" width="38" height="12" rx="2" fill="#B0BAC3" stroke="#7C8791"/>
+    <rect x="958" y="315" width="26" height="6" rx="1" fill="#6B7580"/>
+    <circle cx="1082" cy="296" r="2.8" fill="#5FE0B4"/>
+    <circle cx="1095" cy="296" r="2.8" fill="#F0A83C"/>
+    <rect x="1040" y="304" width="14" height="7" rx="1.5" fill="#1A2A26" stroke="#93ACA4" stroke-width="0.8"/>
+    <rect x="1060" y="304" width="14" height="7" rx="1.5" fill="#1A2A26" stroke="#93ACA4" stroke-width="0.8"/>
+    <text x="1047" y="322" font-size="5" fill="#8FC3B2" text-anchor="middle">EN</text>
+    <text x="1067" y="322" font-size="5" fill="#8FC3B2" text-anchor="middle">BOOT</text>
+    <rect x="838" y="288" width="28" height="18" rx="2" fill="#1B2E29" stroke="#93ACA4" stroke-width="0.8"/>
+    <text x="852" y="300" font-size="5.5" fill="#C9D5E0" text-anchor="middle">4 MB</text>
+    <text x="836" y="316" font-size="5.5" fill="#8FC3B2" letter-spacing="0.4">ESP32-DEVKITC</text>
+  </g>
+
+  <text x="966" y="362" font-size="15" font-weight="700" fill="#ECF0F3" text-anchor="middle">ESP32 field device</text>
+  <text x="966" y="380" font-size="12" fill="#9AA3AC" text-anchor="middle">no cable · Wi-Fi update</text>
+
+  <line x1="48" y1="420" x2="1152" y2="420" stroke="#2A3037"/>
+
+  <!-- Boot flow -->
+  <text x="48" y="446" font-size="10" font-weight="600" letter-spacing="2" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">BOOT FLOW</text>
+  <text x="1152" y="446" font-size="9.5" text-anchor="end" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#7C8791">enforced by the ROM + 2nd-stage bootloader</text>
+
+  <!-- Bootloader -->
+  <path d="M92 470 L120 480 V506 C120 522 104 532 92 538 C80 532 64 522 64 506 V480 Z" fill="#122A24" stroke="#5FE0B4" stroke-width="1.8"/>
+  <path d="M80 506 l8 8 l16 -18" fill="none" stroke="#5FE0B4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="136" y="488" font-size="14" font-weight="700" fill="#ECF0F3">Bootloader chain</text>
+  <text x="136" y="506" font-size="10.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">RSA-PSS · SHA-256</text>
+  <text x="136" y="522" font-size="10.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">key digest in eFuse</text>
+  <text x="136" y="540" font-size="10" fill="#FF6B5E">rejects unsigned / wrong-key images</text>
+
+  <line x1="300" y1="492" x2="348" y2="492" stroke="#ECF0F3" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="324" y="480" font-size="9.5" fill="#7C8791" text-anchor="middle">verifies</text>
+
+  <!-- A/B slots -->
+  <g>
+    <rect x="356" y="470" width="290" height="44" rx="6" fill="#2A2318" stroke="#5A4724"/>
+    <rect x="356" y="470" width="3" height="44" rx="1.5" fill="#F0A83C"/>
+    <text x="372" y="487" font-size="11" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#ECF0F3">ota_0</text>
+    <text x="432" y="488" font-size="14" font-weight="700" fill="#ECF0F3">v1.1.0</text>
+    <text x="630" y="487" font-size="9.5" font-weight="600" fill="#F3B95F" text-anchor="end">pending</text>
+    <text x="372" y="503" font-size="9" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">0x20000 · 1408K</text>
+
+    <rect x="356" y="524" width="290" height="44" rx="6" fill="#122A24" stroke="#2C5E51"/>
+    <rect x="356" y="524" width="3" height="44" rx="1.5" fill="#5FE0B4"/>
+    <text x="372" y="541" font-size="11" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#ECF0F3">ota_1</text>
+    <text x="432" y="542" font-size="14" font-weight="700" fill="#ECF0F3">v1.0.0</text>
+    <text x="630" y="541" font-size="9.5" font-weight="600" fill="#5FE0B4" text-anchor="end">running</text>
+    <text x="372" y="557" font-size="9" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#9AA3AC">0x180000 · 1408K</text>
+  </g>
+
+  <line x1="654" y1="492" x2="752" y2="492" stroke="#ECF0F3" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <text x="703" y="480" font-size="9.5" fill="#7C8791" text-anchor="middle">boots new image</text>
+
+  <!-- Self-test -->
+  <rect x="760" y="480" width="20" height="26" rx="2" fill="none" stroke="#9AA3AC" stroke-width="1.4"/>
+  <rect x="766" y="477" width="8" height="5" rx="1" fill="#9AA3AC"/>
+  <path d="M764 494 l4 4 l8 -9" fill="none" stroke="#5FE0B4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="792" y="496" font-size="14" font-weight="700" fill="#ECF0F3">app self-test</text>
+  <text x="792" y="514" font-size="10.5" fill="#9AA3AC">app descriptor + NVS</text>
+
+  <!-- Pass outcome -->
+  <line x1="920" y1="512" x2="948" y2="512" stroke="#5FE0B4" stroke-width="1.8" marker-end="url(#arrow-teal)"/>
+  <text x="934" y="500" font-size="9.5" fill="#5FE0B4" text-anchor="middle">pass</text>
+  <rect x="958" y="470" width="172" height="88" rx="8" fill="#122A24" stroke="#2C5E51"/>
+  <circle cx="980" cy="492" r="10" fill="none" stroke="#5FE0B4" stroke-width="1.8"/>
+  <path d="M975 492 l4 4 l7 -8" fill="none" stroke="#5FE0B4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1000" y="496" font-size="12.5" font-weight="700" fill="#ECF0F3">image marked valid</text>
+  <text x="1000" y="514" font-size="9.5" fill="#9AA3AC">future boots skip self-test</text>
+  <text x="1000" y="532" font-size="8.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#5FE0B4">esp_ota_mark_app_valid()</text>
+
+  <!-- Rollback -->
+  <path d="M840 570 V610 Q840 624 826 624 H514 Q500 624 500 610 V546" fill="none" stroke="#FF6B5E" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-red)"/>
+  <text x="670" y="642" font-size="10.5" fill="#FF6B5E" text-anchor="middle">self-test fails → bootloader restores the previous slot</text>
+
+  <!-- Serial log -->
+  <rect x="64" y="662" width="1066" height="58" rx="6" fill="#0B0F13" stroke="#262E37"/>
+  <circle cx="80" cy="680" r="3" fill="#5FE0B4"/>
+  <text x="1114" y="680" font-size="8.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#5E7286" text-anchor="end">uart0 · 115200</text>
+  <text x="96" y="682" font-size="10" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#8FA0B2">I (312) <tspan fill="#F0A83C">boot</tspan>: Secure Boot v2 signature <tspan fill="#5FE0B4">OK</tspan></text>
+  <text x="96" y="698" font-size="10" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#8FA0B2">I (338) <tspan fill="#F0A83C">ota</tspan>: booting ota_0 (pending verify)</text>
+  <text x="96" y="714" font-size="10" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#8FA0B2">I (612) <tspan fill="#F0A83C">app</tspan>: self-test <tspan fill="#5FE0B4">passed</tspan> — image valid</text>
+
+  <!-- Footer -->
+  <text x="48" y="752" font-size="8.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#6A7480">source: partitions.csv · sdkconfig.secure.defaults</text>
+  <text x="1152" y="752" font-size="8.5" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace" fill="#6A7480" text-anchor="end">github.com/Ziarmex/esp32-secure-ota</text>
+</svg>
