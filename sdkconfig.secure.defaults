@@ -8,6 +8,8 @@
 # accidentally brick your board.
 
 # Secure Boot v2 requires ESP32 chip revision v3.0 (ECO3) or newer.
+# The choice symbol is what sets ESP32_REV_MIN_FULL; the legacy int alone does not.
+CONFIG_ESP32_REV_MIN_3=y
 CONFIG_ESP32_REV_MIN=3
 
 # --- Secure Boot v2 (RSA-3072, RSA-PSS) ---
